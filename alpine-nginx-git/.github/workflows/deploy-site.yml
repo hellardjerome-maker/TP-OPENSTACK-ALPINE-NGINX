@@ -1,20 +1,22 @@
-name: Deploiement alpine avec nginx
-
+name:  Deploiement alpine avec nginx
 on:
-  workflow_dispatch:
-
+  push:
+    branches: [ "main" ]
+    paths:
+      -
 jobs:
-  deploy:
+ site/**
+  deploy-site:
     runs-on: self-hosted
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Load OpenStack credentials
+      - uses: actions/checkout@v4
+      -name: Déploiement du site sur les serveurs Web
         run: |
-          source /var/snap/microstack/common/etc/microstack.rc
-
-      - name: Deploiement VM sur OpenStack
-        run: |
+          for ip in ${{ secrets.WEB1_IP }}; do
+            scp -r site/* ubuntu@$ip:/var/www/html/
+            ssh ubuntu@$ip 'sudo systemctl reload nginx'
+         run: |
           chmod +x scripts/deploy_vm.sh
           ./scripts/deploy_vm.sh
+          done
+
