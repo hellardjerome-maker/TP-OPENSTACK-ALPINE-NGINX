@@ -1,1 +1,5 @@
+- name: Deploy VM on OpenStack
+  run: |
+    chmod +x scripts/deploy_vm.sh
+    ./scripts/deploy_vm.sh
 
