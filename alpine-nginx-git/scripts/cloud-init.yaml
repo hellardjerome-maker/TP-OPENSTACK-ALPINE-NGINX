@@ -1,12 +1,20 @@
 #cloud-config
 package_update: true
+package_upgrade: true
 
 packages:
   - nginx
 
 runcmd:
+  # Active nginx au démarrage
   - rc-update add nginx default
+  
+  # Démarre nginx immédiatement
   - rc-service nginx start
+  
+  # Crée le dossier web si nécessaire
   - mkdir -p /var/www/localhost/htdocs
-  - echo "<h1>TP OpenStack</h1><p>Déployé via GitHub Actions</p>" > /var/www/localhost/htdocs/index.html
-
+  
+  # Crée la page web avec le hostname
+  - HOSTNAME=$(hostname)
+  - echo "<!DOCTYPE html><html><head><title>$HOSTNAME</title></head><body><h1>TP OpenStack</h1><p>Déployé via GitHub Actions sur $HOSTNAME</p></body></html>" > /var/www/localhost/htdocs/index.html
