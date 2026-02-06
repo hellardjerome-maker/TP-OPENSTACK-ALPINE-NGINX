@@ -16,6 +16,8 @@ if openstack server list | grep -q "$VM_NAME"; then
   exit 0
 fi
 
+USER_DATA="scripts/cloud-init.yaml"
+
 openstack server create \
   --image "$IMAGE" \
   --flavor "$FLAVOR" \
